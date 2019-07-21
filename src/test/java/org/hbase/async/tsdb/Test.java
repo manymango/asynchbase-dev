@@ -2,10 +2,7 @@ package org.hbase.async.tsdb;
 
 
 import com.stumbleupon.async.Deferred;
-import org.hbase.async.Config;
-import org.hbase.async.GetRequest;
-import org.hbase.async.HBaseClient;
-import org.hbase.async.KeyValue;
+import org.hbase.async.*;
 import org.junit.Before;
 
 import java.io.IOException;
@@ -25,7 +22,8 @@ public class Test {
 
     @org.junit.Test
     public void test() throws Exception {
-        final GetRequest  getRequest = new GetRequest("tsdb-uid", "cpu.system");
+        byte[] bytes = {0};
+        final GetRequest  getRequest = new GetRequest("tsdb-uid".getBytes(), bytes);
         getRequest.family("id").qualifier("metrics");
         Deferred o = client.get(getRequest).addCallback(s -> {
             System.out.println("haha");
@@ -39,6 +37,12 @@ public class Test {
         });
         deferred.joinUninterruptibly();
         System.out.println("xixi");
+    }
+
+
+    @org.junit.Test
+    public void atomicIncrement() {
+        client.atomicIncrement(new AtomicIncrementRequest("tsdb-uid","\\x00","id","metrics"));
     }
 
 }
