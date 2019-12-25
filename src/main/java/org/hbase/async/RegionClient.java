@@ -1002,6 +1002,7 @@ final class RegionClient extends ReplayingDecoder<VoidEnum> {
           hbase_client.num_multi_rpcs.increment();
         }
       }
+      //讲查询条件构造成ChannelBuffer
       final ChannelBuffer serialized = encode(rpc);
       if (serialized == null) {  // Error during encoding.
         return;  // Stop here.  RPC has been failed already.
@@ -1380,6 +1381,7 @@ final class RegionClient extends ReplayingDecoder<VoidEnum> {
       }
       final HBaseRpc oldrpc = rpcs_inflight.put(rpc.rpc_id, rpc);
       if (oldrpc != null) {
+        //rpc id重复
         final String wtf = "WTF?  There was already an RPC in flight with"
           + " rpcid=" + rpcid + ": " + oldrpc
           + ".  This happened when sending out: " + rpc;

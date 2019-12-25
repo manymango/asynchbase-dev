@@ -2816,6 +2816,7 @@ public final class HBaseClient {
               d = scanMeta(client, meta_region, meta_name, meta_key, INFO)
                   .addCallback(meta_lookup_done);
             } else {
+              //第二次寻找
               d = client.getClosestRowBefore(meta_region, meta_name, meta_key, INFO)
                   .addCallback(meta_lookup_done)
                   .addErrback(new ErrorCB());
@@ -4206,7 +4207,7 @@ public final class HBaseClient {
     }
 
     /**
-     * Processes a ZooKeeper event.
+     * Processes a ZooKeeper event.   zk回调
      * <p>
      * This method is called back by {@link ZooKeeper} from its main event
      * thread.  So make sure you don't block.
@@ -4388,6 +4389,7 @@ public final class HBaseClient {
           return;
         }
 
+        //找到client进行callback
         final ArrayList<Deferred<Object>> ds = atomicGetAndRemoveWaiters();
         if (ds != null) {
           for (final Deferred<Object> d : ds) {

@@ -3,10 +3,16 @@ package org.hbase.async.tsdb;
 
 import com.stumbleupon.async.Deferred;
 import org.hbase.async.*;
+import org.junit.Assert;
 import org.junit.Before;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertNotNull;
 
 public class Test {
     private HBaseClient client;
@@ -31,18 +37,21 @@ public class Test {
            return s.get(0).value();
         });
         o.joinUninterruptibly();
-        Deferred<Object> deferred = client.ensureTableExists("tsdb").addCallback(s->{
-            System.out.println(s);
-            return null;
-        });
-        deferred.joinUninterruptibly();
-        System.out.println("xixi");
     }
 
 
     @org.junit.Test
     public void atomicIncrement() {
         client.atomicIncrement(new AtomicIncrementRequest("tsdb-uid","\\x00","id","metrics"));
+    }
+
+    @org.junit.Test
+    public void testMap(){
+        Map<String, String> map = new HashMap<>();
+        String a = map.put("1", "abc");
+        Assert.assertNull(a);
+        String b = map.put("1", "def");
+        Assert.assertEquals("abc", b);
     }
 
 }
